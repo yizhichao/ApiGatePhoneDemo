@@ -1,0 +1,59 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.hik.apigatephonedemo"
+        minSdkVersion 17
+        targetSdkVersion 18
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        //  targetCompatibility JavaVersion.VERSION_1_8
+        //  sourceCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+//        main {
+//            jniLibs.srcDirs = ['jniLibs']
+//        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    apply plugin: 'me.tatarka.retrolambda'
+    compile(name: 'artemis_lib-release', ext: 'aar')
+    compile(name: 'ijkplayer-java-release', ext: 'aar')
+    compile files('libs/ecs.jar')
+    compile files('libs/MCRSDK.jar')
+    compile files('libs/MediaPlayer.jar')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-v4:25.3.1'
+    testCompile 'junit:junit:4.12'
+    //    compile project(':artemis_lib')
+    //    compile project(':okgo')
+    compile project(':PullRefreshLibrary')
+}

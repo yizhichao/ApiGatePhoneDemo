@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "E:\\AndroidStudioProject\\ApiGatePhoneDemo\\PullRefreshLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_horizontal.xml",
+        "source": "E:\\AndroidStudioProject\\ApiGatePhoneDemo\\PullRefreshLibrary\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_horizontal.xml"
+    },
+    {
+        "merged": "E:\\AndroidStudioProject\\ApiGatePhoneDemo\\PullRefreshLibrary\\build\\intermediates\\res\\merged\\androidTest\\debug\\layout\\pull_to_refresh_header_vertical.xml",
+        "source": "E:\\AndroidStudioProject\\ApiGatePhoneDemo\\PullRefreshLibrary\\build\\intermediates\\bundles\\debug\\res\\layout\\pull_to_refresh_header_vertical.xml"
+    }
+]

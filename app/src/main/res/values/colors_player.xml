@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_play">#00000000</color>
+    <!--视频预览时悬浮组件的背景色（如播放速率、录像时间）-->
+    <color name="bg_play_above">#77000000</color>
+
+    <!--历史录像回放时控制栏背景色（黑色，50%透明）-->
+    <color name="bg_playback_control">#80000000</color>
+    <!--历史录像回放时进度条背景色（白色，30%透明）-->
+    <color name="playback_seekbar_bg">#4DFFFFFF</color>
+    <!--历史录像回放时进度条颜色-->
+    <color name="playback_seekbar_progress">#FE631E</color>
+</resources>

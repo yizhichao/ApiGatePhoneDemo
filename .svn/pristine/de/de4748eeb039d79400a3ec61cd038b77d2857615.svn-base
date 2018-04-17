@@ -1,0 +1,47 @@
+package com.hik.apigatephonedemo;
+
+
+import android.util.Log;
+
+import com.hikvision.artemis.sdk.ArtemisHttpUtil;
+import com.hikvision.artemis.sdk.config.ArtemisConfig;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by wangkuilin on 2017/9/14.
+ */
+
+public class HttpClient {
+    private static String ARTEMIS_PATH = "/artemis";
+
+    public static void init(){
+//        ArtemisConfig.host = "open8200.hikvision.com";
+//        ArtemisConfig.appKey = "28054265";
+//        ArtemisConfig.appSecret ="AZJp2HKBbDFomBjdN2bZ";
+        ArtemisConfig.host = "10.6.130.133:9999";
+        ArtemisConfig.appKey = "22296013";
+        ArtemisConfig.appSecret ="Gpylwje4gRdyM9vMDpiK";
+
+    }
+
+    public static String doGet(final String strUrl, Map<String, String> querys){
+        Map<String, String> path = new HashMap<String, String>(2){
+            {
+                put("http://", strUrl);
+            }
+        };
+        Log.e("HttpClient","url:"+strUrl);
+//        Log.e("HttpClient","path:"+path);
+//        Log.e("HttpClient","path:"+path.keySet().toArray()[0]);
+        String str = ArtemisHttpUtil.doGetArtemis(path, querys,null,null);
+        Log.e("HttpClient","CallBack:"+str);
+        return str;
+    }
+
+    public static String doPost(Map<String, String> path, Map<String, String> paramMap){
+        return "";
+//        return ArtemisHttpUtil.doPostFormArtemis(path, paramMap,null,null,null);
+    }
+}

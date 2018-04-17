@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="photo_progresswheel_bar_color">#5588FF</color>
+
+    <color name="photo_share_title_black">#000000</color>
+    <color name="photo_share_text_gray">#676767</color>
+</resources>

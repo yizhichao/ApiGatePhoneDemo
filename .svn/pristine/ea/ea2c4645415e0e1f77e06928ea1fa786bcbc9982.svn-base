@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hik.apigatephonedemo.MainActivity">
+
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入用户名"/>
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/userName"
+        android:hint="请输入密码"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/password">
+        <EditText
+            android:id="@+id/verifycode"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:hint="验证码"
+            android:layout_weight="4"/>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="4"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:text="登录"
+            android:layout_weight="2"
+            android:onClick="onLoginClick"/>
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

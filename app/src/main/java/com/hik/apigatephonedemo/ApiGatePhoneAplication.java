@@ -1,0 +1,26 @@
+package com.hik.apigatephonedemo;
+
+import android.app.Application;
+
+import com.hik.apigatephonedemo.utils.CrashHandler;
+import com.hik.mcrsdk.MCRSDK;
+import com.hik.mcrsdk.rtsp.RtspClient;
+//import com.hikvision.vmsnetsdk.VMSNetSDK;
+
+/**
+ * Created by wangkuilin on 2017/9/28.
+ */
+
+public class ApiGatePhoneAplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        MCRSDK.init();
+        RtspClient.initLib();
+        MCRSDK.setPrint(1, null);
+//        VMSNetSDK.getInstance().openLog(true);
+
+        CrashHandler.getInstance().init(this);
+    }
+}

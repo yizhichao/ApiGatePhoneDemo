@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="10dp"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
+              android:layout_marginTop="10dp"
+              android:orientation="vertical">
+    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:id="@+id/refreshBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="刷新"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/playlocalTest"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@id/ll_cloud_area"
+        android:text="本地录像"
+        android:visibility="gone"/>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/lvCameraListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="photo_list_head_height">43dp</dimen>
+    <dimen name="photo_list_head_date_margin_left">10dp</dimen>
+    <dimen name="photo_list_head_date_txt_size">17sp</dimen>
+    <dimen name="photo_list_head_week_margin_left">10dp</dimen>
+    <dimen name="photo_list_head_week_txt_size">14sp</dimen>
+    
+    <dimen name="photo_divide_width">3dp</dimen>
+    <dimen name="photo_select_img_margin">5dp</dimen>
+
+    <dimen name="photo_detail_share_delete_width">100dp</dimen>
+    <dimen name="photo_detail_share_delete_bottom">39dp</dimen>
+    <dimen name="photo_detail_share_delete_margin">100dp</dimen>
+
+    <dimen name="share_dialog_height_40">40dp</dimen>
+    <dimen name="share_dialog_margin_12">12dp</dimen>
+    <dimen name="share_dialog_margin_6">6dp</dimen>
+    <dimen name="share_dialog_margin_53">53dp</dimen>
+    <dimen name="share_dialog_margin_28">28dp</dimen>
+
+    <dimen name="share_dialog_title_text_size">16sp</dimen>
+    <dimen name="share_dialog_text_size">12sp</dimen>
+</resources>

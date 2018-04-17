@@ -1,0 +1,29 @@
+package com.hik.apigatephonedemo.bean;
+
+/**
+ * 【说明】：
+ *
+ * @author zhangchuanyi
+ * @data 2017/11/27 19:28
+ */
+
+public class RecordingInfo {
+    private long beginTime;
+    private long endTime;
+
+    public long getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(long beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="photo_empty_txt">No pictures.</string>
+    <string name="photo_suffix">.jpg</string>
+
+    <string name="photo_no_select_tip">No pictures are selected.</string>
+
+    <string name="photo_share_txt">Share to</string>
+    <string name="photo_share_session">WeChat Friends</string>
+    <string name="photo_share_timeline">WeChat Moments</string>
+
+    <string name="send_img_file_not_exist">The picture path does not exist</string>
+    <string name="not_install_wx_file">This not installed WeChat</string>
+    <string name="not_support_wx_file">wxSDKVersion = %s,This version does not support sharing to WeChat Moments</string>
+    <string name="thump_to_large">Too large picture size. Failed to share</string>
+
+    <string name="fail_share_wx">Sharing failed</string>
+    <string name="errcode_success">Send Success</string>
+    <string name="errcode_fail">Send Fail</string>
+
+    <string name="errcode_cancel">Send Cancel</string>
+    <string name="errcode_deny">Send Deny</string>
+    <string name="errcode_unknown">Send Return</string>
+
+    <string name="folder_share">Share Picture &amp; Video</string>
+    <string name="folder_share_tip1">You can manage the pictures and videos on the PC via the following address.</string>
+    <string name="folder_share_tip2">This function is only available in same LAN</string>
+    <string name="folder_share_toast">Connect to the wireless LAN</string>
+
+    <string name="folder_share_no_wifi_tip1">Not connected to the wifi</string>
+    <string name="folder_share_no_wifi_tip2">Try Again</string>
+</resources>

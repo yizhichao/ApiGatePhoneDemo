@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="file_white">#FFFFFF</color>
+    <color name="file_transparent">#00FFFFFF</color>
+
+    <color name="activity_main_title_txt_color">#FFFFFF</color>
+    <color name="activity_main_tab_select_color">#3B8EFF</color>
+    <color name="activity_main_tab_unselect_color">#636363</color>
+
+    <color name="activity_main_tab_line_default_color">#DDDDDD</color>
+    <color name="activity_main_tab_line_start_color">#4581FF</color>
+    <color name="activity_main_tab_line_middle_color">#2B9DFF</color>
+    <color name="activity_main_tab_line_end_color">#07C5FF</color>
+
+    <color name="file_delete_divide_color">#A6A6A6</color>
+    <color name="file_delete_bg_color">#80F5F5F5</color>
+    <color name="file_delete_txt_color">#5E5E5E</color>
+
+    <color name="file_detail_bg_color">#FF000000</color>
+
+    <color name="file_empty_txt_color">#BDBDBD</color>
+    <color name="file_date_txt_color">#333333</color>
+    <color name="file_week_txt_color">#929292</color>
+
+    <color name="file_detail_title_txt_color">#DDDDDD</color>
+
+    <color name="file_confirm_dialog_title_txt_color">#333333</color>
+    <color name="file_confirm_dialog_left_btn_txt_color">#828383</color>
+    <color name="file_confirm_dialog_right_btn_txt_color">#007AFF</color>
+    <color name="file_confirm_dialog_btn_divide_color">#E0E0E0</color>
+    <color name="file_confirm_dialog_btn_pressed_color">#E4E4E4</color>
+
+    <color name="file_export_text_gray">#a9a9a9</color>
+    <color name="file_export_text_bdbdbd">#bdbdbd</color>
+    <color name="file_export_text_ip">#3992ff</color>
+</resources>

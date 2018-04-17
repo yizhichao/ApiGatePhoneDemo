@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">ApiGatePhoneDemo</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="file">Picture &amp; Video</string>
+
+    <string name="file_excpetion_exit">Program exception. Exiting.</string>
+
+    <string name="file_select_btn_txt">Edit</string>
+    <string name="file_unselect_btn_txt">Cancel</string>
+
+    <string name="file_select_item">Select</string>
+
+    <!--<string name="file_select_item_count">Select %1$s item</string>-->
+    <!--<string name="file_select_video_item_count">Select %1$s item</string>-->
+
+    <string name="file_photo">Picture</string>
+    <string name="file_video">Video</string>
+    <string name="file_audio">Audio</string>
+
+    <string name="file_date_year">Year</string>
+    <string name="file_date_month">Month</string>
+    <string name="file_date_day">Day</string>
+
+    <string name="file_date_today">Today</string>
+    <string name="file_date_yesterday">Yesterday</string>
+
+    <string name="file_week_monday">Monday</string>
+    <string name="file_week_tuesday">Tuesday</string>
+    <string name="file_week_wednesday">Wednesday</string>
+    <string name="file_week_thursday">Thursday</string>
+    <string name="file_week_friday">Friday</string>
+    <string name="file_week_saturday">Saturday</string>
+    <string name="file_week_sunday">Sunday</string>
+
+    <string name="file_delete_txt">Delete</string>
+    <string name="file_confirm_delete_tip">Delete the selected item(s)?</string>
+    <string name="file_delete_success">Deleted.</string>
+    <string name="file_delete_fail">Deleting failed.</string>
+
+    <string name="file_default_wait_dialog_txt">Deleting…</string>
+
+    <string name="file_confirm_dialog_left_btn_txt">Cancel</string>
+    <string name="file_confirm_dialog_right_btn_txt">OK</string>
+
+    <string name="file_share_no">No video or picture</string>
+    <string name="folder_share_title">Video and Picture</string>
+    <string name="folder_share_default_return">Video and Picture</string>
+
+    <string name="file_confirm_enter_photo_tip">Stop playing and go to picture?</string>
+    <string name="file_confirm_enter_dialog_left_btn_txt">Cancel</string>
+    <string name="file_confirm_enter_dialog_right_btn_txt">OK</string>
+</resources>

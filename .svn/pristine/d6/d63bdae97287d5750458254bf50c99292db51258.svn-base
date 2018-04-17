@@ -1,0 +1,85 @@
+package com.hik.apigatephonedemo;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+
+import com.hik.apigatephonedemo.bean.RecordingInfo;
+import com.hik.apigatephonedemo.utils.UIUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 【说明】：
+ *
+ * @author zhangchuanyi
+ * @data 2017/11/27 19:26
+ */
+
+public class RecordingListFragment extends Fragment implements View.OnClickListener{
+    private ListView mListView;
+    private Button searchBtn;
+    private EditText etIP;
+    private EditText etPort;
+    private EditText etBeginTime;
+    private EditText etEndTime;
+    private RecordingAdapter recordingAdapter;
+
+    private String ip="";
+    private String port="";
+    private String beginTime="";
+    private String endTime="";
+
+    private List<RecordingInfo> list = new ArrayList<>();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = View.inflate(getActivity(), R.layout.fragment_recording_list, null);
+        mListView = (ListView) view.findViewById(R.id.lv_recording);
+        searchBtn = (Button) view.findViewById(R.id.searchBtn);
+        etIP = (EditText) view.findViewById(R.id.ip);
+        etPort = (EditText) view.findViewById(R.id.port);
+        etBeginTime = (EditText) view.findViewById(R.id.beginTime);
+        etEndTime = (EditText) view.findViewById(R.id.endTime);
+        searchBtn.setOnClickListener(this);
+        recordingAdapter=new RecordingAdapter(getActivity(),list);
+        mListView.setAdapter(recordingAdapter);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onClick(View v) {
+        getRecordingList();
+    }
+
+    private void getRecordingList() {
+        ip=etIP.getText().toString().trim();
+        port=etPort.getText().toString().trim();
+        beginTime=etBeginTime.getText().toString().trim();
+        endTime=etPort.getText().toString().trim();
+        if(TextUtils.isEmpty(ip)||TextUtils.isEmpty(port)||TextUtils.isEmpty(beginTime)||TextUtils.isEmpty(endTime)){
+            UIUtil.showToast(getActivity(), "参数不完整");
+        }else {
+            
+        }
+    }
+}

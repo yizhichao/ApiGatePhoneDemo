@@ -1,0 +1,602 @@
+package com.hik.apigatephonedemo;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
+import com.hik.apigatephonedemo.media.hls.PlayerManager;
+import com.hik.apigatephonedemo.media.rtsp.ConstantLive;
+import com.hik.apigatephonedemo.media.rtsp.LiveCallBack;
+import com.hik.apigatephonedemo.media.rtsp.LiveControl;
+import com.hik.apigatephonedemo.utils.DebugLog;
+import com.hik.apigatephonedemo.utils.UIUtil;
+import com.hik.apigatephonedemo.utils.UtilFilePath;
+
+import java.util.Random;
+
+public class AudioVideoActivity extends AppCompatActivity implements PlayerManager.PlayerStateListener,
+        View.OnClickListener, SurfaceHolder.Callback, LiveCallBack {
+
+    private static String TAG = "AudioVideoActivity";
+    private String mURL = "";
+    private PlayerManager player;
+    private View mHLSView;
+    private View mRtspView;
+    /*** 开始播放按钮 */
+    private Button mStartBtn;
+    /*** 停止播放按钮  */
+    private Button mStopBtn;
+    /*** 开始云台控制按钮 */
+    private Button mStartPTZBtn;
+    /*** 停止云台控制按钮  */
+    private Button mStopPTZBtn;
+    /*** 抓拍按钮  */
+    private Button mCaptureBtn;
+    /**     * 录像按钮     */
+    private Button mRecordBtn;
+    /**     * 音频按钮     */
+    private Button mAudioBtn;
+    /** 查询录像按钮*/
+    private Button searchBtn;
+    /**     * 码流切换     */
+    private RadioGroup mRadioGroup;
+    /**     * 创建取流等待bar     */
+    private ProgressBar mProgressBar;
+    /**     * 播放视频的控件对象     */
+    private SurfaceView mSurfaceView;
+    /**     * 控制层对象     */
+    private LiveControl mLiveControl;
+    /**     * 创建消息对象     */
+    private Handler mMessageHandler = new MyHandler();
+    /**     * 是否正在录像     */
+    private boolean mIsRecord;
+    /**     * 音频是否开启     */
+    private boolean mIsAudioOpen = false;
+    /**
+     * 云台控制对话框
+     */
+    private AlertDialog mDialog;
+    /**
+     * 监控点ID
+     */
+    private String indexcode;
+    public static final int PTZ_RESULT = 999;
+    /**
+     * 上次选择的控制命令
+     */
+    private int whichLast;
+    /**
+     * 云台控制操作指令
+     */
+    private String action;
+    /**
+     * 云台控制区域
+     */
+    private LinearLayout ll_cloud_area;
+    private boolean showPTZ;
+    /**     * 创建云台控制消息对象     */
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case PTZ_RESULT:
+                    if (msg.obj != null) {
+                        UIUtil.showToast(AudioVideoActivity.this, (String) msg.obj);
+                    }
+                    break;
+                case ConstantLive.PTZ_FAILED_NPLAY_STATE:
+                    UIUtil.showToast(AudioVideoActivity.this, "非播放状态不能云台控制");
+                default:
+                    break;
+            }
+        }
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_audio_video);
+
+        initView();
+
+        Intent intent = getIntent();
+        mURL = intent.getStringExtra("URL");
+        indexcode = intent.getStringExtra(MainActivity.INDEXCODE);
+        showPTZ = intent.getBooleanExtra("showPTZ", true);
+        if (showPTZ) {
+            ll_cloud_area.setVisibility(View.VISIBLE);
+        } else {
+            ll_cloud_area.setVisibility(View.GONE);
+        }
+        initPlayer(mURL);
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    private void initView(){
+        mHLSView = findViewById(R.id.hls_view);
+        mRtspView = findViewById(R.id.rtsp_view);
+        mStartBtn = (Button)findViewById(R.id.liveStartBtn);
+        mStartBtn.setOnClickListener(this);
+        mStopBtn = (Button)findViewById(R.id.liveStopBtn);
+        mStopBtn.setOnClickListener(this);
+        mCaptureBtn = (Button)findViewById(R.id.liveCaptureBtn);
+        mCaptureBtn.setOnClickListener(this);
+        mRecordBtn = (Button)findViewById(R.id.liveRecordBtn);
+        mRecordBtn.setOnClickListener(this);
+        mAudioBtn = (Button)findViewById(R.id.liveAudioBtn);
+        mAudioBtn.setOnClickListener(this);
+        mStartPTZBtn = (Button) findViewById(R.id.start_ctrl);
+        mStartPTZBtn.setOnClickListener(this);
+        mStopPTZBtn = (Button) findViewById(R.id.stop_ctrl);
+        mStopPTZBtn.setOnClickListener(this);
+        searchBtn = (Button) findViewById(R.id.searchBtn);
+        searchBtn.setOnClickListener(this);
+        mSurfaceView = (SurfaceView)findViewById(R.id.surfaceView);
+        mSurfaceView.getHolder().addCallback(this);
+        mProgressBar = (ProgressBar)findViewById(R.id.liveProgressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        ll_cloud_area = (LinearLayout) findViewById(R.id.ll_cloud_area);
+    }
+
+    public void initPlayer(String strUrl) {
+        mURL = strUrl;
+
+        // HLS协议
+        if(strUrl.contains("http")){
+            player = new PlayerManager(this);
+            player.setFullScreenOnly(true);
+            player.setScaleType(PlayerManager.SCALETYPE_FILLPARENT);
+            player.playInFullScreen(true);
+            player.setPlayerStateListener(this);
+//        String url = "http://10.33.25.27:83/pag/10.33.25.17/7302/14000000001310015180/0/MAIN/TCP/live.m3u8?idinfo=EBACAAAQAACr6KAVpV87EoyxS%2F5950VvBDq7UjCh%2BC%2B8FdEenbkszqI9yNpbUvT1F7b0FLdbSJR4jLqwKdTPcsZzoWRVkbt%2F&checkinfo=eyJ0aW1lIjoiMjAxNzA5MjdUMTMwMTQ2WiIsInVybCI6Imh0dHA6Ly8xMC4zMy4yNS4yNzo4My9wYWcvMTAuMzMuMjUuMTcvNzMwMi8xNDAwMDAwMDAwMTMxMDAxNTE4MC8wL01BSU4vVENQL2xpdmUubTN1OCJ9";
+            player.play(strUrl);
+
+            /** 界面 */
+            mHLSView.setVisibility(View.VISIBLE);
+            mRtspView.setVisibility(View.GONE);
+
+        }else if (strUrl.contains("rtsp")){
+            /** 界面 */
+            mHLSView.setVisibility(View.GONE);
+            mRtspView.setVisibility(View.VISIBLE);
+
+            if (null == mLiveControl){
+                mLiveControl = new LiveControl();
+                mLiveControl.setLiveCallBack(this);
+            }
+
+            startBtnOnClick();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.liveStartBtn:
+                startBtnOnClick();
+                break;
+
+            case R.id.liveStopBtn:
+                stopBtnOnClick();
+                break;
+
+            case R.id.liveCaptureBtn:
+                captureBtnOnClick();
+                break;
+
+            case R.id.liveRecordBtn:
+                recordBtnOnClick();
+                break;
+
+            case R.id.liveAudioBtn:
+                audioBtnOnClick();
+                break;
+            case R.id.start_ctrl:
+                startCloudCtrl();
+                break;
+            case R.id.stop_ctrl:
+                stopCloudCtrl();
+                break;
+            case R.id.searchBtn:
+                Intent intent = new Intent(AudioVideoActivity.this,SearchRecordingActivity.class);
+                intent.putExtra(MainActivity.INDEXCODE,indexcode);
+                startActivity(intent);
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 开始云台控制，弹出控制界面
+     */
+    private void startCloudCtrl()
+    {
+
+        final String[] gestureIDs = {"LEFT","RIGHT","UP","DOWN","LEFT_UP","LEFT_DOWN","RIGHT_UP","RIGHT_DOWN","ZOOMIN","ZOOMOUT"};
+        String[] datas =
+                {"云台转左", "云台转右", "云台转上", "云台转下", "云台左上", "云台左下", "云台右上", "云台右下", "镜头拉近", "镜头拉远"/*, "镜头近焦", "镜头远焦"*/};
+//        mDialog = new AlertDialog.Builder(this).setSingleChoiceItems(datas, whichLast, new DialogInterface.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which)
+//            {
+//                whichLast = which;
+//                action = gestureIDs[which];
+//                mDialog.dismiss();
+//                sendCtrlCmd(action);
+//            }
+//        }).create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(AudioVideoActivity.this);
+        builder.setSingleChoiceItems(datas, whichLast, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                whichLast = which;
+                action = gestureIDs[which];
+            }
+        });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mLiveControl.sendCtrlCmd(action,indexcode);
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        mDialog = builder.create();
+        mDialog.show();
+    }
+
+    /**
+     * 停止云台控制
+     */
+    private void stopCloudCtrl()
+    {
+        mLiveControl.stopCloudCtrl(action, indexcode);
+    }
+    /**
+     * 启动播放 void
+     *
+     */
+    private void startBtnOnClick()
+    {
+        mProgressBar.setVisibility(View.VISIBLE);
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                super.run();
+                mLiveControl.setLiveParams(mURL, "admin", "12345");
+                if (mLiveControl.LIVE_PLAY == mLiveControl.getLiveState())
+                {
+                    mLiveControl.stop();
+                }
+
+                if (mLiveControl.LIVE_INIT == mLiveControl.getLiveState())
+                {
+                    mLiveControl.startLive(mSurfaceView);
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 停止播放 void
+     *
+     */
+    private void stopBtnOnClick(){
+        if (null != mLiveControl)
+        {
+            mLiveControl.stop();
+        }
+    }
+
+    /**
+     * 抓拍 void
+     *
+     */
+    private void captureBtnOnClick()
+    {
+        if (null != mLiveControl)
+        {
+            // 随即生成一个1到10000的数字，用于抓拍图片名称的一部分，区分图片，开发者可以根据实际情况修改区分图片名称的方法
+            int recordIndex = new Random().nextInt(10000);
+            boolean ret =
+                    mLiveControl.capture(UtilFilePath.getPictureDirPath().getAbsolutePath(), "Picture" + recordIndex
+                            + ".jpg");
+            if (ret)
+            {
+                UIUtil.showToast(this, "抓拍成功");
+//                UtilAudioPlay.playAudioFile(this, R.raw.paizhao);
+            }
+            else
+            {
+                UIUtil.showToast(this, "抓拍失败");
+                DebugLog.error(TAG, "captureBtnOnClick():: 抓拍失败");
+            }
+        }
+    }
+
+    /**
+     * 录像 void
+     *
+     * @since V1.0
+     */
+    private void recordBtnOnClick()
+    {
+        if (null != mLiveControl)
+        {
+            if (!mIsRecord)
+            {
+                // 随即生成一个1到10000的数字，用于录像名称的一部分，区分图片，开发者可以根据实际情况修改区分录像名称的方法
+                int recordIndex = new Random().nextInt(10000);
+                boolean ret =
+                        mLiveControl.startRecord(UtilFilePath.getVideoDirPath().getAbsolutePath(), "Video" + recordIndex
+                                + ".mp4");
+                if (ret)
+                {
+                    UIUtil.showToast(this, "启动录像成功");
+                    mIsRecord = true;
+                    mRecordBtn.setText("停止录像");
+                }
+                else
+                {
+                    UIUtil.showToast(this, "启动录像失败");
+                    DebugLog.error(TAG, "recordBtnOnClick():: 启动录像失败");
+                }
+            }
+            else
+            {
+                mLiveControl.stopRecord();
+                mIsRecord = false;
+                UIUtil.showToast(this, "停止录像成功");
+                mRecordBtn.setText("开始录像");
+            }
+        }
+    }
+
+    /**
+     * 音频 void
+     *
+     * @since V1.0
+     */
+    private void audioBtnOnClick()
+    {
+        if (null != mLiveControl)
+        {
+            if (mIsAudioOpen)
+            {
+                mLiveControl.stopAudio();
+                mIsAudioOpen = false;
+                UIUtil.showToast(this, "关闭音频");
+                mAudioBtn.setText("开启音频");
+            }
+            else
+            {
+                boolean ret = mLiveControl.startAudio();
+                if (!ret)
+                {
+                    mIsAudioOpen = false;
+                    UIUtil.showToast(this, "开启音频失败");
+                    mAudioBtn.setText("音频");
+                }
+                else
+                {
+                    mIsAudioOpen = true;
+                    // 开启音频成功，并不代表一定有声音，需要设备开启声音。
+                    UIUtil.showToast(this, "开启音频成功");
+                    mAudioBtn.setText("关闭音频");
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onComplete() {
+        Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onError() {
+        Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLoading() {
+        Toast.makeText(this, "loading...", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPlay() {
+        Toast.makeText(this, "play", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        if (null != mLiveControl)
+        {
+            if (mIsRecord)
+            {
+                mRecordBtn.setText("开始录像");
+                mLiveControl.stopRecord();
+                mIsRecord = false;
+            }
+            mLiveControl.stop();
+        }
+    }
+
+    @Override
+    public void onMessageCallback(int message) {
+        sendMessageCase(message);
+    }
+
+
+    private void sendMessageCase(int i)
+    {
+        if (null != mMessageHandler)
+        {
+            Message msg = Message.obtain();
+            msg.arg1 = i;
+            mMessageHandler.sendMessage(msg);
+        }
+    }
+
+    @Override
+    public void onMessagePTZCallBack(int caseId, Bundle data, Object object) {
+        sendMessage(caseId, data, object);
+    }
+
+    private final class MyHandler extends Handler
+    {
+        public void handleMessage(Message msg)
+        {
+            switch (msg.arg1)
+            {
+                case ConstantLive.RTSP_SUCCESS:
+                    UIUtil.showToast(AudioVideoActivity.this, "启动取流成功");
+                    break;
+
+                case ConstantLive.STOP_SUCCESS:
+                    UIUtil.showToast(AudioVideoActivity.this, "停止成功");
+                    break;
+
+                case ConstantLive.START_OPEN_FAILED:
+                    UIUtil.showToast(AudioVideoActivity.this, "开启播放库失败");
+                    if (null != mProgressBar)
+                    {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                    break;
+
+                case ConstantLive.PLAY_DISPLAY_SUCCESS:
+                    UIUtil.showToast(AudioVideoActivity.this, "播放成功");
+                    if (null != mProgressBar)
+                    {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                    break;
+
+                case ConstantLive.RTSP_FAIL:
+                    UIUtil.showToast(AudioVideoActivity.this, "RTSP链接失败");
+                    if (null != mProgressBar)
+                    {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                    if (null != mLiveControl)
+                    {
+                        mLiveControl.stop();
+                    }
+                    break;
+
+                case ConstantLive.GET_OSD_TIME_FAIL:
+                    UIUtil.showToast(AudioVideoActivity.this, "获取OSD时间失败");
+                    break;
+
+                case ConstantLive.SD_CARD_UN_USEABLE:
+                    UIUtil.showToast(AudioVideoActivity.this, "SD卡不可用");
+                    break;
+
+                case ConstantLive.SD_CARD_SIZE_NOT_ENOUGH:
+                    UIUtil.showToast(AudioVideoActivity.this, "SD卡空间不足");
+                    break;
+                case ConstantLive.CAPTURE_FAILED_NPLAY_STATE:
+                    UIUtil.showToast(AudioVideoActivity.this, "非播放状态不能抓拍");
+                    break;
+                case ConstantLive.RECORD_FAILED_NPLAY_STATE:
+                    UIUtil.showToast(AudioVideoActivity.this, "非播放状态不能录像");
+                    break;
+                case ConstantLive.AUDIO_START_FAILED_NPLAY_STATE:
+                    UIUtil.showToast(AudioVideoActivity.this, "非播放状态不能开启音频");
+                    break;
+                case PTZ_RESULT:
+                    Log.e(TAG, "云台控制结果：" + msg.obj);
+                    UIUtil.showToast(AudioVideoActivity.this, String.valueOf(msg.obj));
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    public void sendMessage(int caseId, Bundle data, Object object)
+    {
+        if (mHandler == null)
+        {
+            Log.e(TAG, "sentMessage,param error,msgHandler is null");
+            return;
+        }
+        Message msg = Message.obtain();
+        msg.what = caseId;
+        if (data != null)
+        {
+            msg.setData(data);
+        }
+        if (object != null){
+            msg.obj = object;
+        }
+        mHandler.sendMessage(msg);
+    }
+}
