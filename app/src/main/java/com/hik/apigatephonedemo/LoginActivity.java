@@ -3,8 +3,11 @@ package com.hik.apigatephonedemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+
+import com.hik.apigatephonedemo.utils.ToastUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,9 +33,9 @@ public class LoginActivity extends AppCompatActivity {
         host = etHost.getText().toString().trim();
         userName = etUserName.getText().toString().trim();
         password = etPassword.getText().toString().trim();
-        /*if (TextUtils.isEmpty(host) || TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(host) || TextUtils.isEmpty(userName) || TextUtils.isEmpty(password)) {
             ToastUtil.showToast(this, "参数不完整，请输入host、appkey和appSecret");
-        } else */{
+        } else {
             HttpClient.init(host, userName, password);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

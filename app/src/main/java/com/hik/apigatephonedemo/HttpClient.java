@@ -18,15 +18,9 @@ public class HttpClient {
     private static final String TAG = "/HttpClient";
 
     public static void init(String host, String userName, String password) {
-                ArtemisConfig.host = "open8200.hikvision.com";
-                ArtemisConfig.appKey = "23114629";
-                ArtemisConfig.appSecret ="NOxUXbEAgMCL94mOYrOO";
-        //        ArtemisConfig.host = "10.33.25.19:9999";
-        //        ArtemisConfig.appKey = "28523404";
-        //        ArtemisConfig.appSecret ="TDEt4xs6rniO6jlcYlsv";
-//        ArtemisConfig.host = host;
-//        ArtemisConfig.appKey = userName;
-//        ArtemisConfig.appSecret = password;
+        ArtemisConfig.host = host;
+        ArtemisConfig.appKey = userName;
+        ArtemisConfig.appSecret = password;
 
     }
 
