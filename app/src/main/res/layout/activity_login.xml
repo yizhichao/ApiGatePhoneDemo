@@ -75,7 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/llAppSecret"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
         <EditText
             android:id="@+id/verifyCode"
             android:layout_width="0dp"
