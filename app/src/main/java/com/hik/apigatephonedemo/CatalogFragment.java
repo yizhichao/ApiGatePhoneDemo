@@ -86,7 +86,7 @@ public class CatalogFragment extends Fragment implements View.OnClickListener,Pu
         lvCameraListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ControlUnit controlUnit = mDataList.get(position);
+                ControlUnit controlUnit = mDataList.get(position-lvCameraListView.getRefreshableView().getHeaderViewsCount());
                 if (null == controlUnit || controlUnit.getIndexCode().equals("0")){
                     return;
                 }
